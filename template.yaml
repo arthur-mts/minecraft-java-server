@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  mine_lambda
+
+  Sample SAM Template for mine_lambda
+  
+Globals:
+  Function:
+    Timeout: 3
+
+
+Resources:
+  ChangeStatusAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Auth:
+        ApiKeyRequired: true
+
+  TeardownEC2Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: teardown/
+      Handler: app.lambdaHandler
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          EC2_ID: i-0be29face8e291d05
+          MAX_HOURS: 6
+      Policies:
+        - AmazonEC2FullAccess
+      Architectures:
+        - x86_64
+      Events:
+        ShutdownEvent:
+          Type: Schedule
+          Properties:
+            Schedule: 'rate(1 hour)'
+            Name: ShutdownEventSchedule
+            Enabled: true
+
+  StartupEC2Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: startup/
+      Handler: app.lambdaHandler
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          EC2_ID: i-0be29face8e291d05
+      Policies:
+        - AmazonEC2FullAccess
+      Architectures:
+        - x86_64
+      Events:
+        StatusAPI:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ChangeStatusAPI
+            Path: /
+            Method: post
+            Auth:
+              ApiKeyRequired: true
+
+
+
+Outputs:
+  StartupApi:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Value: !Sub "https://${ChangeStatusAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/startup/"
+  StartupEC2Function:
+    Description: "ChangeStatus Function ARN"
+    Value: !GetAtt StartupEC2Function.Arn
+  StartupEC2FunctionIamRole:
+    Description: "Implicit IAM Role created for ChangeStatusAPI function"
+    Value: !GetAtt StartupEC2FunctionRole.Arn
