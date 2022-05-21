@@ -17,6 +17,6 @@ ip = subprocess.getoutput(get_ip_command).split("\n")[-1].strip()
 
 send_discord_message(
     {
-        "content": f"Link do servidor do Mine:\n {ip}:25565"
+        "content": f"Link do servidor do Mine:\n{ip}:25565"
     }
 )
