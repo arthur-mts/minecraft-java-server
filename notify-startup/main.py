@@ -13,7 +13,7 @@ def send_discord_message(payload):
     return response.json()
 
 get_ip_command = "curl http://checkip.amazonaws.com"
-ip = subprocess.getoutput(get_ip_command)
+ip = subprocess.getoutput(get_ip_command).split("\n")[-1]
 
 send_discord_message(
     {
