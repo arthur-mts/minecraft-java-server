@@ -4,7 +4,7 @@ This project aims to facilitate the deployment and management of a cloud based L
 ## AWS Resources
 To host and expose our server I used a t2.medium AWS EC2 instance (with defaults Network and Security configs), exposing the 25565 TCP port.  
 
-I don't pretend to leave the server up 24/7, me and my friends only play Minecraft on weekends and get and dedicated cloud machine to host Minecraft would be a waste of money. So, I used an **AWS Lambda Function** exposed by an **AWS API Gateway** to startup/shutdown the EC2 Instance.
+I don't pretend to leave the server up 24/7, me and my friends only play Minecraft on weekends and get a dedicated cloud machine to host Minecraft would be a waste of money. So, I used an **AWS Lambda Function** exposed by an **AWS API Gateway** to startup/shutdown the EC2 Instance.
 
 ## Minecraft Server
 The easiest thing on this project was startup the Minecraft Server, due to this incredible [post](https://dev.to/julbrs/how-to-run-a-minecraft-server-on-aws-for-less-than-3-us-a-month-409p) on DEV by Julien Bras.  
